@@ -1,33 +1,38 @@
 const path = require("path");
-const webpack = require("webpack");
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: "./src/index.tsx",
   mode: "development",
-  module: {
-    rules: [
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: "babel-loader"
-      },
-      {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"]
-      }
-    ]
-  },
-  resolve: { extensions: ["*", ".js", ".jsx"] },
-  output: {
-    path: path.resolve(__dirname, "dist/"),
-    publicPath: "/dist/",
-    filename: "bundle.js"
+  devtool: "source-map",
+  resolve: {
+    extensions: [".ts", ".tsx", ".js", ".scss"]
   },
   devServer: {
     contentBase: path.join(__dirname, "public/"),
     port: 3000,
-    publicPath: "http://localhost:3000/dist/",
-    hotOnly: true
+    publicPath: "http://localhost:3000/dist/"
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()]
+  output: {
+    path: path.resolve(__dirname, "dist/"),
+    publicPath: "/dist/",
+    filename: "./bundle.js"
+  },
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        loader: "ts-loader"
+      },
+      {
+        enforce: "pre",
+        test: /\.js$/,
+        loader: "source-map-loader"
+      },
+      {
+        test: /\.scss$/,
+        use: ["style-loader", "css-loader", "sass-loader"]
+      }
+    ]
+  }
 };
